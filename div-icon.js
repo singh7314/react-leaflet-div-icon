@@ -46,7 +46,8 @@ export default class Divicon extends MapLayer {
   }
 
   updateLeafletElement(fromProps, toProps) {
-    if (toProps.position !== fromProps.position) {
+    if (toProps.position[0] !== fromProps.position[0] ||
+      toProps.position[1] !== fromProps.position[1]) {
       this.leafletElement.setLatLng(toProps.position);
     }
     if (toProps.zIndexOffset !== fromProps.zIndexOffset) {
@@ -72,6 +73,7 @@ export default class Divicon extends MapLayer {
 
   componentDidMount() {
     super.componentDidMount();
+    this.ContextProvider = createContextProvider({ ...this.context, ...this.getChildContext() });
     this.renderComponent();
   }
 
@@ -84,9 +86,9 @@ export default class Divicon extends MapLayer {
     const ContextProvider = createContextProvider({...this.context, ...this.getChildContext()});
     const container = this.leafletElement._icon;
     const component = (
-      <ContextProvider>
+      <this.ContextProvider>
         {this.props.children}
-      </ContextProvider>
+      </this.ContextProvider>
     );
     if (container) {
       render(
